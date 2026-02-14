@@ -6,6 +6,7 @@ import UpscSection from "@/components/birthday/UpscSection";
 import DebateSection from "@/components/birthday/DebateSection";
 import FinalSection from "@/components/birthday/FinalSection";
 import FloatingParticles from "@/components/birthday/FloatingParticles";
+import MusicToggle from "@/components/birthday/MusicToggle";
 
 const Index = () => {
   useEffect(() => {
@@ -38,6 +39,7 @@ const Index = () => {
   return (
     <div className="relative min-h-screen bg-background overflow-x-hidden">
       <FloatingParticles />
+      <MusicToggle />
       <div className="relative z-10">
         <HeroSection />
         <ProbabilitySection />
