@@ -8,7 +8,6 @@ const MUSIC_URLS = [
 
 const MusicToggle = () => {
   const [playing, setPlaying] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const urlIndexRef = useRef(0);
 
@@ -45,18 +44,11 @@ const MusicToggle = () => {
       
       // Handle when audio can play
       const canPlayHandler = () => {
-        const audioName = MUSIC_URLS[urlIndex].split('/').pop() || MUSIC_URLS[urlIndex];
-        console.log(`🎵 Audio ready: ${audioName}`);
-        setCurrentAudio(audioName);
+        console.log("Audio ready to play");
       };
       
       audio.addEventListener("error", errorHandler);
       audio.addEventListener("canplaythrough", canPlayHandler);
-      
-      // Set current audio immediately
-      const audioName = MUSIC_URLS[urlIndex].split('/').pop() || MUSIC_URLS[urlIndex];
-      setCurrentAudio(audioName);
-      console.log(`🎵 Loading audio: ${audioName}`);
       
       audioRef.current = audio;
     };
@@ -76,12 +68,10 @@ const MusicToggle = () => {
     if (playing) {
       audioRef.current.pause();
       setPlaying(false);
-      console.log(`⏸️ Paused: ${currentAudio}`);
     } else {
       try {
         await audioRef.current.play();
         setPlaying(true);
-        console.log(`▶️ Now playing: ${currentAudio}`);
       } catch (error) {
         console.error("Error playing audio:", error);
         // Try to load the audio again if it failed
@@ -89,7 +79,6 @@ const MusicToggle = () => {
         try {
           await audioRef.current.play();
           setPlaying(true);
-          console.log(`▶️ Now playing (retry): ${currentAudio}`);
         } catch (retryError) {
           console.error("Retry failed:", retryError);
         }
@@ -98,24 +87,16 @@ const MusicToggle = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-      {currentAudio && (
-        <div className="bg-black/70 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
-          {currentAudio}
-        </div>
-      )}
-      <motion.button
-        onClick={toggle}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 2, type: "spring" }}
-        className="w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition-transform"
-        aria-label={playing ? "Pause music" : "Play music"}
-        title={currentAudio ? `Now: ${currentAudio}` : "Music"}
-      >
-        {playing ? "🔊" : "🎵"}
-      </motion.button>
-    </div>
+    <motion.button
+      onClick={toggle}
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 2, type: "spring" }}
+      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition-transform"
+      aria-label={playing ? "Pause music" : "Play music"}
+    >
+      {playing ? "🔊" : "🎵"}
+    </motion.button>
   );
 };
 
